@@ -1,0 +1,3 @@
+# CsvParser
+
+brew install imagemagick
