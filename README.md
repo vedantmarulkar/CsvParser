@@ -1,3 +1,3 @@
 # CsvParser
 
-brew install imagemagick
+Used to demonstrate CSV parsing with OpenCSV
