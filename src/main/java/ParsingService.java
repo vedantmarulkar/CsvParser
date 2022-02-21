@@ -14,18 +14,19 @@ import java.util.List;
 public class ParsingService {
 
     public static void parse() throws IOException, CsvRequiredFieldEmptyException, CsvDataTypeMismatchException {
-        String fileName = "/Users/vedantmarulkar/Documents/New_Query_2022_02_17.csv";
+        String inputFilePath = "input file path";
 
-        String output = "/Users/vedantmarulkar/Documents/output.csv";
+        String outputFilePath = "output file path";
 
-        List<LinkDTO> beans = new CsvToBeanBuilder(new FileReader(fileName))
-                .withType(LinkDTO.class)
+        List<CsvColumns> beans = new CsvToBeanBuilder(new FileReader(inputFilePath))
+                .withType(CsvColumns.class)
                 .build()
                 .parse();
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
+
         int i = 1;
-        for (LinkDTO bean : beans) {
+        for (CsvColumns bean : beans) {//Parsing each row of CSV
             Request request = new Request.Builder()
                     .url(bean.getImage_url())
                     .method("HEAD", null)
@@ -33,10 +34,10 @@ public class ParsingService {
             Response response = client.newCall(request).execute();
             String sizeInBytes = response.header("content-length");
             bean.setSize_in_bytes(sizeInBytes);
-            System.out.println(i++);
         }
 
-        Writer writer  = new FileWriter(output);
+        //Write to output file
+        Writer writer  = new FileWriter(outputFilePath);
 
         StatefulBeanToCsv beanToCsv = new StatefulBeanToCsvBuilder(writer)
                 .withSeparator(CSVWriter.DEFAULT_SEPARATOR)
